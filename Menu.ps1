@@ -18,16 +18,14 @@ function Show-MainMenu {
     return Read-Host "`n`n`nChoose a Category:`n
     (1)`t`tChecks`n
     (2)`t`tPrograms`n
-    (Clean)`tDelete`n
+    (delete)`tDelete`n
     (0)`t`tClose Script`n`nChoose"
 }
 
 function Show-ChecksMenu {
     return Read-Host "`n`n`nChecks Menu:`n
     (1)`tFull Check`n
-    (2)`tQuick Check`n
-    (3)`tRecording Check`n
-    (4)`tAdvanced Filechecking (BETA - Requires Full Check)`n
+    (2)`tRecording Check`n
     (0)`tBack to Main Menu`n`nChoose"
 }
 
