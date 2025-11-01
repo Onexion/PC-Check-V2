@@ -1,4 +1,3 @@
-
 $ErrorActionPreference = "SilentlyContinue" 
 $configJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V1/refs/heads/main/cfg.json" 
 $Astra = $configJson.Astra
