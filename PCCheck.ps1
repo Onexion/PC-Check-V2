@@ -542,7 +542,7 @@ $usnTampering = if ($JournalImp.Length -lt 1000) { "`nPotential Manipulation in 
 $csv = Import-Csv -Path "$dmppath\Journal\Raw\Journal.csv" -Header "Timestamp","Path","Action","Extension"
 $lastRow = $csv[-1]
 $journalDate = [datetime]::Parse($lastRow.Timestamp)
-$latestUSN = ("Latest USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
+$latestUSN = ("First USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
 
 
 $evtTampering = ("`nEventvwr Registration: $((Get-Item ""$env:APPDATA\Microsoft\MMC\eventvwr"").LastWriteTime)")
@@ -628,7 +628,7 @@ if ($MFTdllMatchOutput.Count -gt 0) {
 $MFTdllMatchOutput | Out-File -FilePath "C:\temp\dump\mft\MFT_DLL_Matches.txt" -Encoding UTF8
 
 $lastWinUpdate = (Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1).InstalledOn
-$Winupdata = "`nLast Windows Update: $lastWinUpdate`n"
+$Winupdata = "Last Windows Update: $lastWinUpdate"
 
 Write-Host "   Invoking Direct Detection - Finishing"-ForegroundColor yellow
 $dps = (Get-Content C:\temp\dump\processes\raw\dps.txt | Where-Object { $_ -match '!!' -and $_ -match 'exe' -and $_ -match '2024' } | Sort-Object -Unique) -join "`n"
