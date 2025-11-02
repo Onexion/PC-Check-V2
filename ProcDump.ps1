@@ -3,6 +3,7 @@ $dmppath = "C:\Temp\Dump"
 $procpath = "C:\Temp\Dump\Processes"
 $procpathraw = "C:\Temp\Dump\Processes\Raw"
 $procpathfilt = "C:\Temp\Dump\Processes\Filtered"
+$Powershellfilter = @("WebRequest", "Bypass", "raw.githubusercontent", "Github", "-ExclusionPath", "-encodedCommand")
 
 function Get-ProcessID {
     param(
@@ -26,6 +27,9 @@ $processList2 = @{
     "dnscache" = Get-ProcessID -ServiceName "Dnscache"
     "lsass"    = (Get-Process lsass).Id
     "AggregatorHost"    = (Get-Process AggregatorHost).Id
+}
+$processListPowershell = @{
+    "powershell" = (Get-Process powershell).Id
 }
 $processList = $processList1 + $processList2
 
@@ -124,3 +128,11 @@ C:\temp\dump\hollows_hunter.exe /pname "Explorer.exe;GTA5.exe;AMDRSServ.exe;nvco
 Get-Content "c:\temp\dump\processes\hooks.json" | Out-File "c:\temp\dump\processes\Hooks.txt"
 Remove-Item "c:\temp\dump\processes\hooks.json"
 Remove-Item "c:\temp\dump\processes\raw\hollows_hunter.dumps" -Recurse
+
+& "$dmppath\strings2.exe" -a -l 5 -pid $processListPowershell | Set-Content -Path "$procpathraw\powershell.txt" -Encoding UTF8
+$inputFile = Join-Path $procpathraw "powershell.txt"
+$outputFile = Join-Path $outputPath "powershell_filtered.txt"
+Get-Content $inputFile | Where-Object {
+    $line = $_
+    -not ($Powershellfilter | ForEach-Object { $line -match $_ })
+} | Set-Content -Path $outputFile -Encoding UTF8
