@@ -1,4 +1,4 @@
-
+ 
 $ErrorActionPreference = "SilentlyContinue" 
 $configJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V1/refs/heads/main/cfg.json" 
 $Astra = $configJson.Astra
@@ -614,7 +614,7 @@ if ($MFTdllMatchOutput.Count -gt 0) {
 $MFTdllMatchOutput | Out-File -FilePath "C:\temp\dump\mft\MFT_DLL_Matches.txt" -Encoding UTF8
 
 $lastWinUpdate = (Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1).InstalledOn
-$Winupdata = "`nLast Windows Update: $lastWinUpdate`n"
+$Winupdata = "Last Windows Update: $lastWinUpdate"
 
 Write-Host "   Invoking Direct Detection - Finishing"-ForegroundColor yellow
 $dps = (Get-Content C:\temp\dump\processes\raw\dps.txt | Where-Object { $_ -match '!!' -and $_ -match 'exe' -and $_ -match '2024' } | Sort-Object -Unique) -join "`n"
