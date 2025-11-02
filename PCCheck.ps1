@@ -539,7 +539,8 @@ $amcachecheck = if (Test-Path $Amcache) {
 
 $usnTampering = if ($JournalImp.Length -lt 1000) { "`nPotential Manipulation in USNJournal Detected - Filesize: $($JournalImp.Length)" }
 
-$usnlength = $csv = Import-Csv -Path $JournalImp -Header "Timestamp","Path","Action","Extension"
+$USNCSV = "$dmppath\Journal\Raw\Journal.csv"
+$usnlength = $csv = Import-Csv -Path $USNCSV -Header "Timestamp","Path","Action","Extension"
 $lastRow = $csv[-1]
 $journalDate = [datetime]::Parse($lastRow.Timestamp)
 Write-Host ("Latest USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
