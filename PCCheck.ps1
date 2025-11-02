@@ -1,5 +1,6 @@
+
 $ErrorActionPreference = "SilentlyContinue" 
-$configJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V2/refs/heads/main/cfg.json" 
+$configJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V1/refs/heads/main/cfg.json" 
 $Astra = $configJson.Astra
 $FilesizeH = $configJson.FilesizeH
 $FilesizeL = $configJson.FilesizeL
@@ -612,6 +613,9 @@ if ($MFTdllMatchOutput.Count -gt 0) {
 
 $MFTdllMatchOutput | Out-File -FilePath "C:\temp\dump\mft\MFT_DLL_Matches.txt" -Encoding UTF8
 
+$lastWinUpdate = (Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1).InstalledOn
+$Winupdata = "`nLast Windows Update: $lastWinUpdate`n"
+
 Write-Host "   Invoking Direct Detection - Finishing"-ForegroundColor yellow
 $dps = (Get-Content C:\temp\dump\processes\raw\dps.txt | Where-Object { $_ -match '!!' -and $_ -match 'exe' -and $_ -match '2024' } | Sort-Object -Unique) -join "`n"
 $Cheats1 = ""
@@ -734,7 +738,7 @@ $Cheats7 = $HashMatchings
 
 if ($Cheats1 -or $Cheats2 -or $Cheats3 -or $Cheats4 -or $Cheats5 -or $Cheats6 -or $Cheats7) { $Cheatsheader = $h7 }
 
-@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
+@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $Winupdata, $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
 
 Remove-Item -Path "C:\Temp\Dump\config", "C:\Temp\Dump\logs", "C:\Temp\Dump\rules", "C:\Temp\Dump\RECmd", "C:\Temp\Dump\Events\Haya", "C:\Temp\Dump\Events\Raw" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Temp\Dump\*.exe", "C:\Temp\Dump\*.zip", "C:\Temp\Dump\Detections.txt" -Force -ErrorAction SilentlyContinue
