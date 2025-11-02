@@ -129,9 +129,13 @@ Get-Content "c:\temp\dump\processes\hooks.json" | Out-File "c:\temp\dump\process
 Remove-Item "c:\temp\dump\processes\hooks.json"
 Remove-Item "c:\temp\dump\processes\raw\hollows_hunter.dumps" -Recurse
 
-& "$dmppath\strings2.exe" -a -l 5 -pid $processListPowershell | Set-Content -Path "$procpathraw\powershell.txt" -Encoding UTF8
+$processListPowershell = Get-Process powershell -ErrorAction SilentlyContinue
+$powerPIDs = $processListPowershell | Select-Object -ExpandProperty Id
+$powerPIDs | ForEach-Object {
+    & "$dmppath\strings2.exe" -a -l 5 -pid $_
+} | Set-Content -Path "$procpathraw\powershell.txt" -Encoding UTF8
 $inputFile = Join-Path $procpathraw "powershell.txt"
-$outputFile = Join-Path $outputPath "powershell_filtered.txt"
+$outputFile = Join-Path $procpathfilt "powershell_filtered.txt"
 Get-Content $inputFile | Where-Object {
     $line = $_
     -not ($Powershellfilter | ForEach-Object { $line -match $_ })
