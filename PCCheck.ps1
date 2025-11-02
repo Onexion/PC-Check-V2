@@ -539,11 +539,10 @@ $amcachecheck = if (Test-Path $Amcache) {
 
 $usnTampering = if ($JournalImp.Length -lt 1000) { "`nPotential Manipulation in USNJournal Detected - Filesize: $($JournalImp.Length)" }
 
-$USNCSV = "$dmppath\Journal\Raw\Journal.csv"
-$usnlength = $csv = Import-Csv -Path $USNCSV -Header "Timestamp","Path","Action","Extension"
+$csv = Import-Csv -Path "$dmppath\Journal\Raw\Journal.csv" -Header "Timestamp","Path","Action","Extension"
 $lastRow = $csv[-1]
 $journalDate = [datetime]::Parse($lastRow.Timestamp)
-Write-Host ("Latest USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
+$latestUSN = ("Latest USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
 
 
 $evtTampering = ("`nEventvwr Registration: $((Get-Item ""$env:APPDATA\Microsoft\MMC\eventvwr"").LastWriteTime)")
@@ -753,7 +752,7 @@ $Cheats7 = $HashMatchings
 
 if ($Cheats1 -or $Cheats2 -or $Cheats3 -or $Cheats4 -or $Cheats5 -or $Cheats6 -or $Cheats7) { $Cheatsheader = $h7 }
 
-@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $Winupdata; $usnlength; $amcachecheck; $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
+@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $Winupdata; $latestUSN; $amcachecheck; $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
 
 Remove-Item -Path "C:\Temp\Dump\config", "C:\Temp\Dump\logs", "C:\Temp\Dump\rules", "C:\Temp\Dump\RECmd", "C:\Temp\Dump\Events\Haya", "C:\Temp\Dump\Events\Raw" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Temp\Dump\*.exe", "C:\Temp\Dump\*.zip", "C:\Temp\Dump\Detections.txt" -Force -ErrorAction SilentlyContinue
