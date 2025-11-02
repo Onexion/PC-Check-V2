@@ -1,4 +1,4 @@
- 
+
 $ErrorActionPreference = "SilentlyContinue" 
 $configJson = Invoke-RestMethod -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V1/refs/heads/main/cfg.json" 
 $Astra = $configJson.Astra
@@ -529,7 +529,21 @@ $minusSettings = if ($minusResults) {
     $minusResults
 }
 
+$Amcache = "C:\Windows\AppCompat\Programs\Amcache.hiv"
+$amcachecheck = if (Test-Path $Amcache) {
+    $size = (Get-Item $Amcache).Length
+    if ($size -lt 3MB) {
+        Write-Host ("Amcache possibly tampered with: Size: {0:N2} MB" -f ($size / 1MB))
+    }
+}
+
 $usnTampering = if ($JournalImp.Length -lt 1000) { "`nPotential Manipulation in USNJournal Detected - Filesize: $($JournalImp.Length)" }
+
+$usnlength = $csv = Import-Csv -Path $JournalImp -Header "Timestamp","Path","Action","Extension"
+$lastRow = $csv[-1]
+$journalDate = [datetime]::Parse($lastRow.Timestamp)
+Write-Host ("Latest USN entry: {0:MM/dd/yyyy HH:mm:ss}" -f $journalDate)
+
 
 $evtTampering = ("`nEventvwr Registration: $((Get-Item ""$env:APPDATA\Microsoft\MMC\eventvwr"").LastWriteTime)")
 $evtTampering2 = ("`nEventvwr Settings: $((Get-Item ""$env:LOCALAPPDATA\Microsoft\Event Viewer\Settings.Xml"").LastWriteTime)")
@@ -614,7 +628,7 @@ if ($MFTdllMatchOutput.Count -gt 0) {
 $MFTdllMatchOutput | Out-File -FilePath "C:\temp\dump\mft\MFT_DLL_Matches.txt" -Encoding UTF8
 
 $lastWinUpdate = (Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1).InstalledOn
-$Winupdata = "Last Windows Update: $lastWinUpdate"
+$Winupdata = "`nLast Windows Update: $lastWinUpdate`n"
 
 Write-Host "   Invoking Direct Detection - Finishing"-ForegroundColor yellow
 $dps = (Get-Content C:\temp\dump\processes\raw\dps.txt | Where-Object { $_ -match '!!' -and $_ -match 'exe' -and $_ -match '2024' } | Sort-Object -Unique) -join "`n"
@@ -738,7 +752,7 @@ $Cheats7 = $HashMatchings
 
 if ($Cheats1 -or $Cheats2 -or $Cheats3 -or $Cheats4 -or $Cheats5 -or $Cheats6 -or $Cheats7) { $Cheatsheader = $h7 }
 
-@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $Winupdata, $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
+@($Cheatsheader; $cheats1; $cheats2; $cheats3; $cheats4; $cheats5; $cheats6; $h1; $o1; $susJournal; $Winupdata; $usnlength; $amcachecheck; $browserSuspicion; $minusSettings; $settingslastModified; $t3; $sUptime; $lastColdBoot; $lastRestart; $LastBoot; $h6; $usbOutput; $usbExecutions; $h2; $Tamperings; $h3; $threats; $h4; $eventResults; $h5; $t1; $combine; $t2; $dps1; $r; $t4; $noFilesFound) | Add-Content C:\Temp\Dump\Results.txt
 
 Remove-Item -Path "C:\Temp\Dump\config", "C:\Temp\Dump\logs", "C:\Temp\Dump\rules", "C:\Temp\Dump\RECmd", "C:\Temp\Dump\Events\Haya", "C:\Temp\Dump\Events\Raw" -Recurse -Force -ErrorAction SilentlyContinue
 Remove-Item -Path "C:\Temp\Dump\*.exe", "C:\Temp\Dump\*.zip", "C:\Temp\Dump\Detections.txt" -Force -ErrorAction SilentlyContinue
@@ -763,7 +777,6 @@ if ($response -eq 'Y') {
     Start-Process powershell -ArgumentList '-File "C:\Temp\Scripts\Localhost.ps1"' -WindowStyle Hidden
     Start-Sleep 1
     Start-Process "http://localhost:8080/viewer.html"
-    #Start-Process -FilePath "notepad.exe" -ArgumentList "C:\temp\dump\results.txt"
     Write-Host "`n`n`n`tResults will open" -Foregroundcolor Green
     Write-Host "`tReturning to Menu in " -NoNewline 
     Write-Host "3 " -NoNewLine -ForegroundColor Magenta
