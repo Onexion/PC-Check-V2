@@ -124,7 +124,7 @@ $sUptime | Out-File C:\temp\dump\processes\Uptime.txt
 
 Move-Item -Path "$procpath\*.txt" -Destination "$procpathfilt"
 
-C:\temp\dump\hollows_hunter.exe /pname "Explorer.exe;GTA5.exe;AMDRSServ.exe;nvcontainer.exe;obs64.exe;Medal.exe;MedalEncoder.exe" /hooks /quiet /json /jlvl 2 | out-file c:\temp\dump\processes\hooks.json
+C:\temp\dump\hollows_hunter.exe /pname "Explorer.exe;GTA5.exe;AMDRSServ.exe;nvcontainer.exe;obs64.exe;Medal.exe;MedalEncoder.exe;FiveM.exe;lghub.exe" /hooks /quiet /json /jlvl 2 | out-file c:\temp\dump\processes\hooks.json
 Get-Content "c:\temp\dump\processes\hooks.json" | Out-File "c:\temp\dump\processes\Hooks.txt"
 Remove-Item "c:\temp\dump\processes\hooks.json"
 Remove-Item "c:\temp\dump\processes\raw\hollows_hunter.dumps" -Recurse
