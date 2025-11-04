@@ -189,7 +189,7 @@ $filesToCheck = @(
     "C:\Temp\Dump\Events\Events.csv",
     "C:\Temp\Dump\Journal\Raw\Journal.csv",
     "C:\Temp\Dump\MFT\MFT.csv"
-    #"C:\Temp\Dump\Processes\Raw\Explorer.txt"
+    "C:\Temp\Dump\Processes\Raw\Explorer.txt"
 )
 
 while ($true) {
