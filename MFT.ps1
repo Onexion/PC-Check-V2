@@ -179,7 +179,7 @@ $usnDump | Where-Object { $_.'UpdateReasons' -match 'RenameOldName' -or $_.'Upda
 $usnDump | Where-Object { $_.'Extension' -in ".rar", ".zip", ".7z" } | Select-Object 'FilePath', 'UpdateTimestamp' | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File Compressed.txt -Append -Width 4096
 $usnDump | Where-Object { $_.'UpdateReasons' -match "DataTruncation" -and $_.'Extension' -eq ".exe" } | Select-Object 'FilePath', 'UpdateTimestamp' | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File ReplacedExe.txt -Append -Width 4096
 $usnDump | Where-Object { $_.'FilePath' -match '\?' } | Select-Object 'FilePath', 'UpdateTimestamp' | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File EmptyCharacter.txt -Append -Width 4096
-$usnDump | Where-Object { $_.FilePath -match 'System32' -and $_.Extension -eq ".exe" } | Sort-Object UpdateTimestamp -Descending | ForEach-Object { $_.FilePath } | Out-File System32exe.txt -Append -Width 4096
-$usnDump | Where-Object { $_.FilePath -match 'System32' -and $_.Extension -eq ".dll" } | Sort-Object UpdateTimestamp -Descending | ForEach-Object { $_.FilePath } | Out-File System32dll.txt -Append -Width 4096
-$usnDump | Where-Object { $_.FilePath -match 'SysWOW64' -and $_.Extension -eq ".exe" } | Sort-Object UpdateTimestamp -Descending | ForEach-Object { $_.FilePath } | Out-File SysWOW64exe.txt -Append -Width 4096
-$usnDump | Where-Object { $_.FilePath -match 'SysWOW64' -and $_.Extension -eq ".dll" } | Sort-Object UpdateTimestamp -Descending | ForEach-Object { $_.FilePath } | Out-File SysWOW64dll.txt -Append -Width 4096
+$usnDump | Where-Object { $_.'FilePath' -match 'System32' -and $_.'Extension' -eq ".exe" } | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File System32exe.txt -Append -Width 4096
+$usnDump | Where-Object { $_.'FilePath' -match 'System32' -and $_.'Extension' -eq ".dll" } | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File System32dll.txt -Append -Width 4096
+$usnDump | Where-Object { $_.'FilePath' -match 'SysWOW64' -and $_.'Extension' -eq ".exe" } | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File SysWOW64exe.txt -Append -Width 4096
+$usnDump | Where-Object { $_.'FilePath' -match 'SysWOW64' -and $_.'Extension' -eq ".dll" } | Sort-Object 'UpdateTimestamp' -Descending -Unique | Out-File SysWOW64dll.txt -Append -Width 4096
