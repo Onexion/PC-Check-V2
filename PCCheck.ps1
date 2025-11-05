@@ -237,7 +237,7 @@ $file = "C:\Temp\Dump\Shellbags\Shellbags_Result.txt"
 $drives = Select-String -Path $file -Pattern 'Drive letter:\s*([A-Z])' |
     ForEach-Object { $_.Matches.Groups[1].Value } |
     Sort-Object -Unique
-$ShellbagDrives = "Drives in Shellbags: " + ($drives | ForEach-Object { "$_:" } -join ", ")
+$ShellbagDrives = "Drives in Shellbags: " + ($drives -join ", ")
 
 $PrefetchImp | 
 Select-Object LastRun, SourceFilename, RunCount, Volume1Serial | 
