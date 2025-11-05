@@ -233,6 +233,12 @@ $EventsImp | Where-Object {
     }
 }} | Select-Object @{Name='Timestamp'; Expression={($_.Timestamp -as [datetime]).ToString('yyyy-MM-dd HH:mm:ss')}}, RuleTitle, Details, Level | Export-Csv -Path C:\temp\dump\Events\Events_Overview.csv -NoTypeInformation
 
+$file = "C:\Temp\Dump\Shellbags\Shellbags_Result.txt"
+$drives = Select-String -Path $file -Pattern 'Drive letter:\s*([A-Z])' |
+    ForEach-Object { $_.Matches.Groups[1].Value } |
+    Sort-Object -Unique
+$ShellbagDrives = "Drives in Shellbags: " + ($drives -join ", ")
+
 $PrefetchImp | 
 Select-Object LastRun, SourceFilename, RunCount, Volume1Serial | 
 Export-Csv "C:\temp\dump\prefetch\Prefetch_Overview.csv" -NoTypeInformation
@@ -291,6 +297,7 @@ $o1 = & {
     $fatDrives = (Get-WmiObject Win32_LogicalDisk | Where-Object { ($_.FileSystem -eq 'FAT32' -or $_.FileSystem -eq 'exFAT') -and ($_.DriveType -eq 3 -or $_.DriveType -eq 2) } | ForEach-Object { "$($_.DeviceID)\" }) -join ', '
     if ($fatDrives) { "FAT Drive detected: $fatDrives" }
     "Volumes in Registry: $(if ($regvolumes = Get-ChildItem -Path 'HKLM:\SOFTWARE\Microsoft\Windows Search\VolumeInfoCache' | ForEach-Object { $_ -replace '^.*\\([^\\]+)$', '$1' }) { $regvolumes -join ', ' } else { 'Registry Volume Cache Manipulated' })"
+    $ShellbagDrives
     "Windows Version: $((Get-WmiObject -Class Win32_OperatingSystem).Caption), Build: $((Get-WmiObject -Class Win32_OperatingSystem).BuildNumber)"
     $windowsInstallDate = [Management.ManagementDateTimeConverter]::ToDateTime((Get-WmiObject Win32_OperatingSystem).InstallDate).ToString('dd/MM/yyyy')
     "Windows Installation: $windowsInstallDate"
