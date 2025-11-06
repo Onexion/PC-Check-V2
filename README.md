@@ -7,5 +7,4 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/Onexion/PC-Check-V2/ma
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force
 Add-MpPreference -ExclusionPath 'C:\Temp' | Out-Null
 .\Menu.ps1
-
 ```
