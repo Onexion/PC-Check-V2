@@ -293,7 +293,6 @@ foreach ($impnames in $importings) {
 Write-Host "   Analyzing System Information"-ForegroundColor yellow
 $o1 = & {
     $scripttime
-    $Scriptrunduration
     "Connected Drives: $(Get-WmiObject Win32_LogicalDisk | Where-Object {$_.DriveType -eq 3 -or $_.DriveType -eq 2} | ForEach-Object { "$($_.DeviceID)\" })" -join ', '
     $fatDrives = (Get-WmiObject Win32_LogicalDisk | Where-Object { ($_.FileSystem -eq 'FAT32' -or $_.FileSystem -eq 'exFAT') -and ($_.DriveType -eq 3 -or $_.DriveType -eq 2) } | ForEach-Object { "$($_.DeviceID)\" }) -join ', '
     if ($fatDrives) { "FAT Drive detected: $fatDrives" }
@@ -637,10 +636,6 @@ $MFTdllMatchOutput | Out-File -FilePath "C:\temp\dump\mft\MFT_DLL_Matches.txt" -
 
 $lastWinUpdate = (Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 1).InstalledOn
 $Winupdata = "Last Windows Update: $lastWinUpdate"
-
-$endTime = Get-Date -Format 'dd/MM/yyyy HH:mm:ss'
-$duration = $endTime - $scripttime
-$Scriptrunduration = Write-Host "Runtime: $duration"
 
 Write-Host "   Invoking Direct Detection - Finishing"-ForegroundColor yellow
 $dps = (Get-Content C:\temp\dump\processes\raw\dps.txt | Where-Object { $_ -match '!!' -and $_ -match 'exe' -and $_ -match '2024' } | Sort-Object -Unique) -join "`n"
