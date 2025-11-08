@@ -62,7 +62,7 @@ foreach ($entry in $processList1.GetEnumerator()) {
     $service = $entry.Key
     $pidVal = $entry.Value
     if ($null -ne $pidVal) {
-        & "$dmppath\strings2.exe" -a -l 5 -pid $pidVal | Set-Content -Path "$procpathraw\$service.txt" -Encoding UTF8
+        & "$dmppath\strings2.exe" -a -l 5 -pid $pidVal | Select-String -Pattern "\.exe|\.bat|\.ps1|\.rar|\.zip|\.7z|\.dll" | Set-Content -Path "$procpathraw\$service.txt" -Encoding UTF8
     }
 }
 
